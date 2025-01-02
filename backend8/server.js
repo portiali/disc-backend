@@ -2,7 +2,6 @@
 const express = require("express");
 const multer = require("multer");
 
-
 const supabase = require("./src/config/supabase");
 const cors = require("cors");
 
@@ -13,17 +12,27 @@ app.use(cors());
 
 app.post("/login", upload.none(), async (req, res) => {
     try {
-        const { firstname, email } = req.body;
-  
-
+        const { first_name, email } = req.body;
         const { data, error } = await supabase
-            .from("users")
-            .insert({
-                firstname,
-                email,
-            })
+            .from('users')
+            .insert([{first_name,email}])
             .select()
-            .single();
+
+        if (error) throw error;
+        console.log("User created:", data);
+        res.json(data);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+app.get("/users/profiles", async (req, res) => {
+    try {
+        const { first_name, email } = req.body;
+        const { data, error } = await supabase
+            .from('users')
+            .select()
+            .single()
 
         if (error) throw error;
         console.log("User created:", data);

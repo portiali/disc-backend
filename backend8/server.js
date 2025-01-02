@@ -26,19 +26,37 @@ app.post("/login", upload.none(), async (req, res) => {
     }
 });
 
-app.get("/users/profiles", async (req, res) => {
+
+app.post("/editprofile", upload.none(), async (req, res) => {
     try {
-        const { first_name, email } = req.body;
+        const { bio, profile_picture } = req.body;
         const { data, error } = await supabase
-            .from('users')
+            .from('user_profiles')
+            .insert([{ bio, profile_picture }])
             .select()
-            .single()
 
         if (error) throw error;
-        console.log("User created:", data);
+        console.log("User profile created:", data);
         res.json(data);
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+});
+
+app.get("/users/profiles", async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('users')
+            .select(`
+                *,
+                user_profiles(*)
+                `)
+
+        if (error) throw error;
+        console.log("Fetched users with profiles:", data);
+        res.json(data);
+    } catch (error) {
+        res.status(400).json({ error });
     }
 });
 

@@ -25,22 +25,8 @@ app.post("/login", upload.none(), async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 });
-
-
 app.post("/editprofile", upload.none(), async (req, res) => {
-    try {
-        const { bio, profile_picture } = req.body;
-        const { data, error } = await supabase
-            .from('user_profiles')
-            .insert([{ bio, profile_picture }])
-            .select()
-
-        if (error) throw error;
-        console.log("User profile created:", data);
-        res.json(data);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+    
 });
 
 app.get("/users/profiles", async (req, res) => {
@@ -59,6 +45,12 @@ app.get("/users/profiles", async (req, res) => {
         res.status(400).json({ error });
     }
 });
+
+
+
+
+
+
 
 const PORT = process.env.PORT || 3003;
 app.listen(PORT, () => {

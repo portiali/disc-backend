@@ -6,7 +6,7 @@ const multer = require("multer");
 const upload = multer();  // Initialize multer here
 
 //uncomment after testing!!
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 // Protected routes
 // router.get("/profile", userController.getProfile);

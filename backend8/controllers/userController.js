@@ -1,8 +1,76 @@
 const supabase = require("../src/config/supabase");
 
-
 // Create instance before exporting
 const userController = new (class UserController {
+
+    async postImage(req, res){
+        const {title, filename, userId} = req.body;
+        const { data, error } = await supabase
+            .from('user_posts')
+            .insert([
+                {
+                    auth_id: userId,
+                    title: title,
+                    filename: filename  // store filename or relative path
+                }
+            ]);
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+        res.status(200).json({ message: 'Image metadata added successfully', data });
+    }
+
+    async checkLiked(req, res){
+        const { userId } = req.query; // Get the userId from the query parameters
+        const { img_id } = req.params; // Get the imageId from the URL parameters
+
+        const { data, error } = await supabase
+            .from('likes')
+            .select('*')
+            .eq('auth_id', userId)
+            .eq('img_id', img_id);
+
+        if (error) {
+            return res.status(400).json({ error: error.message });
+        }
+
+        return res.status(200).json({ liked: data && data.length > 0 });
+    }
+
+    async likeImage(req, res){
+        const { userId, imageId } = req.body;
+
+        // Check if the user has already liked the image
+        const { data, error } = await supabase
+            .from('likes')
+            .select('*')
+            .eq('auth_id', userId)
+            .eq('img_id', imageId);
+
+        if (data && data.length > 0) {
+            // User has already liked this image, so remove the like
+            const { error: deleteError } = await supabase
+                .from('likes')
+                .delete()
+                .eq('auth_id', userId)
+                .eq('img_id', imageId);
+
+            if (deleteError) {
+                return res.status(400).json({ error: deleteError.message });
+            }
+            return res.json({ liked: false }); // Return the new like status
+        } else {
+            // User has not liked this image, so add the like
+            const { error: insertError } = await supabase
+                .from('likes')
+                .insert([{ auth_id: userId, img_id: imageId }]);
+
+            if (insertError) {
+                return res.status(400).json({ error: insertError.message });
+            }
+            return res.json({ liked: true }); // Return the new like status
+        }
+    }
 
     async getImages(req, res){
         try{
@@ -44,6 +112,26 @@ const userController = new (class UserController {
 
             if (error) throw error;
             console.log("Fetched users with profiles:", data);
+            res.json(data);
+        } catch (error) {
+            res.status(400).json({ error });
+        }
+    }
+
+    async getUserByID(req, res) {
+        try {
+            const {userId} = req.params;
+            const { data, error } = await supabase
+                .from('users')
+                .select(`
+                *,
+                user_profiles(*)
+                `)
+                .eq('auth_id', userId)
+                .single();
+
+            if (error) throw error;
+            console.log("Fetched user with id:", data);
             res.json(data);
         } catch (error) {
             res.status(400).json({ error });

@@ -3,7 +3,8 @@ const router = express.Router();
 const userController = require("../controllers/userController"); // Match exact filename
 const authMiddleware = require("../middleware/auth");
 
-router.use(authMiddleware);
+//uncomment after testing!!
+// router.use(authMiddleware);
 
 // Protected routes
 // router.get("/profile", userController.getProfile);
@@ -14,7 +15,12 @@ router.use(authMiddleware);
 
 //newly added
 router.post("/editprofile", userController.editProfile);
-router.get("users/profiles", userController.getAllUsers)
+router.get("/profiles", userController.getAllUsers)
 router.post("/createnew", userController.createNew);
 router.get('/images', userController.getImages);
+router.get('/liked/:img_id', userController.checkLiked);
+router.post('/like', userController.likeImage);
+router.post('/post-image', userController.postImage);
+router.get('/:id', userController.getUserByID);
+
 module.exports = router;

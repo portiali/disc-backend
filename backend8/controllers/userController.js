@@ -120,7 +120,10 @@ const userController = new (class UserController {
 
     async getUserByID(req, res) {
         try {
-            const {userId} = req.params;
+            // console.log("THIS IS REQ PARAMS", req.params);
+            // console.log("THIS IS THE PARAM ID", req.params.id);
+            const  userId = req.params.id;
+            // console.log("THIS IS THE USERID", userId);
             const { data, error } = await supabase
                 .from('users')
                 .select(`

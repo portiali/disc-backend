@@ -41,6 +41,7 @@ class AuthController {
             if (dbProfileError) throw dbProfileError;
 
             //user_posts
+            // get rid of this only use this when a new post is added!
             const newUserPosts = {
                 auth_id: authData.user.id,
                 img_location: "temp",

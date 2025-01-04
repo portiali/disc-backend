@@ -4,6 +4,20 @@ const supabase = require("../src/config/supabase");
 // Create instance before exporting
 const userController = new (class UserController {
 
+    async getImages(req, res){
+        try{
+            const { data, error } = await supabase
+            .from('user_posts')
+            .select('*');
+
+            if (error) throw error;
+            console.log("Images fetched: ", data);
+            res.json(data);
+        } catch(error){
+            res.status(400).json({ error: error.message });
+        }
+    }
+
     async createNew(req, res) {
         try {
             const { auth_id, first_name, email } = req.body;

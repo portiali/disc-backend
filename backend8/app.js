@@ -13,6 +13,7 @@ app.use(cors(corsOptions));
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 
+
 // const upload = multer();
 app.use(express.urlencoded({ extended: true }));
 

@@ -44,7 +44,8 @@ class AuthController {
             const newUserPosts = {
                 auth_id: authData.user.id,
                 img_location: "temp",
-                count: 0
+                count: 0,
+                title: "no title"
             }
 
             const { data: dbPosts, error: dbPostsError } = await supabase

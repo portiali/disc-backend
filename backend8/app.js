@@ -10,8 +10,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
+// const authRoutes = require("./routes/authRoutes");
+// const userRoutes = require("./routes/userRoutes");
+const authRoutes = require("./api/auth");
+const userRoutes = require("./api/user");
 
 
 // const upload = multer();

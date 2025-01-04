@@ -128,7 +128,7 @@ const userController = new (class UserController {
             if (updateProfileError) throw updateProfileError;
 
             console.log("User updated:", updatedUser);
-            res.json({
+            res.status(200).json({
                 message: "User updated successfully!",
                 updatedUser,
                 updatedProfile

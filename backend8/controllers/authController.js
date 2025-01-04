@@ -45,7 +45,6 @@ class AuthController {
             const newUserPosts = {
                 auth_id: authData.user.id,
                 img_location: "temp",
-                count: 0,
                 title: "no title"
             }
 

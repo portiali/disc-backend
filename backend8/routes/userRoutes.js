@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController"); // Match exact filename
 const authMiddleware = require("../middleware/auth");
+const multer = require("multer");
+const upload = multer();  // Initialize multer here
 
 //uncomment after testing!!
 // router.use(authMiddleware);
@@ -22,6 +24,6 @@ router.get('/liked/:img_id', userController.checkLiked);
 router.post('/like', userController.likeImage);
 router.post('/post-image', userController.postImage);
 router.get('/:id', userController.getUserByID);
-router.put('/:id/edit', userController.updateUser)
+router.put('/:id/edit', upload.none(), userController.updateUser)
 
 module.exports = router;

@@ -16,11 +16,12 @@ const authMiddleware = require("../middleware/auth");
 //newly added
 router.post("/editprofile", userController.editProfile);
 router.get("/profiles", userController.getAllUsers)
-router.post("/createnew", userController.createNew);
+router.post( "/createnew", userController.createNew);
 router.get('/images', userController.getImages);
 router.get('/liked/:img_id', userController.checkLiked);
 router.post('/like', userController.likeImage);
 router.post('/post-image', userController.postImage);
 router.get('/:id', userController.getUserByID);
+router.put('/:id/edit', userController.updateUser)
 
 module.exports = router;

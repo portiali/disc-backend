@@ -3,8 +3,8 @@ const supabase = require("../src/config/supabase");
 // Create instance before exporting
 const userController = new (class UserController {
 
-    async postImage(req, res){
-        const {title, filename, userId} = req.body;
+    async postImage(req, res) {
+        const { title, filename, userId } = req.body;
         const { data, error } = await supabase
             .from('user_posts')
             .insert([
@@ -20,7 +20,7 @@ const userController = new (class UserController {
         res.status(200).json({ message: 'Image metadata added successfully', data });
     }
 
-    async checkLiked(req, res){
+    async checkLiked(req, res) {
         const { userId } = req.query; // Get the userId from the query parameters
         const { img_id } = req.params; // Get the imageId from the URL parameters
 
@@ -37,7 +37,7 @@ const userController = new (class UserController {
         return res.status(200).json({ liked: data && data.length > 0 });
     }
 
-    async likeImage(req, res){
+    async likeImage(req, res) {
         const { userId, imageId } = req.body;
 
         // Check if the user has already liked the image
@@ -72,16 +72,69 @@ const userController = new (class UserController {
         }
     }
 
-    async getImages(req, res){
-        try{
+    async getImages(req, res) {
+        try {
             const { data, error } = await supabase
-            .from('user_posts')
-            .select('*');
+                .from('user_posts')
+                .select('*');
 
             if (error) throw error;
             console.log("Images fetched: ", data);
             res.json(data);
-        } catch(error){
+        } catch (error) {
+            res.status(400).json({ error: error.message });
+        }
+    }
+
+    async updateUser(req, res) {
+        try {
+
+            const auth_id = req.params.id
+            console.log("PARAMS", req.params);
+            console.log("BODY", req.body);
+            const { first_name, email, bio, profile_picture} = req.body;
+            // Check if the user exists
+            const { data: existingUser, error: checkError } = await supabase
+                .from('users')
+                .select('*')
+                .eq('auth_id', auth_id)
+                .single();
+
+            console.log("EXIST USER", existingUser);
+            if (!existingUser) {
+                return res.status(404).json({ error: "User does not exist" });
+            }
+
+            if (checkError) throw checkError;
+
+            const { data: updatedUser, error: updateError } = await supabase
+                .from('users')
+                .update({ first_name, email })
+                .eq('auth_id', auth_id)
+                .select();
+
+            console.log("UPDATED USER", updatedUser);
+
+            if (updateError) throw updateError;
+
+            const { data: updatedProfile, error: updateProfileError } = await supabase
+                .from('user_profiles')
+                .update({ bio, profile_picture })
+                .eq('auth_id', auth_id)
+                .select();
+
+            console.log("UPDATE PROFILE", updatedProfile);
+
+            if (updateProfileError) throw updateProfileError;
+
+            console.log("User updated:", updatedUser);
+            res.json({
+                message: "User updated successfully!",
+                updatedUser,
+                updatedProfile
+            });
+
+        } catch (error) {
             res.status(400).json({ error: error.message });
         }
     }
@@ -122,7 +175,7 @@ const userController = new (class UserController {
         try {
             // console.log("THIS IS REQ PARAMS", req.params);
             // console.log("THIS IS THE PARAM ID", req.params.id);
-            const  userId = req.params.id;
+            const userId = req.params.id;
             // console.log("THIS IS THE USERID", userId);
             const { data, error } = await supabase
                 .from('users')
@@ -144,9 +197,9 @@ const userController = new (class UserController {
     async editProfile(req, res) {
         try {
             const { first_name, bio, profile_picture } = req.body;
-            const {data: userData , error: userError} = await supabase
+            const { data: userData, error: userError } = await supabase
                 .from('user_profiles')
-                .insert([{first_name}])
+                .insert([{ first_name }])
                 .select()
 
             if (userError) throw userError;

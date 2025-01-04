@@ -15,5 +15,6 @@ router.use(authMiddleware);
 //newly added
 router.post("/editprofile", userController.editProfile);
 router.get("users/profiles", userController.getAllUsers)
+router.post("/createnew", userController.createNew);
 
 module.exports = router;

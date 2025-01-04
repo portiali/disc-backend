@@ -1,21 +1,67 @@
 const supabase = require("../src/config/supabase");
+const userController = require("./userController");
 
 class AuthController {
     async signUp(req, res) {
         try {
             const { email, password } = req.body;
 
-            const { data, error } = await supabase.auth.signUp({
+            const { data: authData, error: authError } = await supabase.auth.signUp({
                 email,
                 password,
             });
 
-            if (error) throw error;
+            if (authError) throw authError;
+
+            //users
+            const newUser = {
+                auth_id: authData.user.id,
+                first_name: "newUser",
+                email: email
+            }
+            const { data: dbData, error: dbError } = await supabase
+                .from("users")
+                .insert(newUser)
+                .select();
+
+            if (dbError) throw dbError;
+
+            //user_profiles
+            const newUserProfile = {
+                auth_id: authData.user.id,
+                bio: "no bio",
+                profile_picture: "no profile picture"
+            }
+
+            const { data: dbProfile, error: dbProfileError } = await supabase
+                .from("user_profiles")
+                .insert(newUserProfile)
+                .select();
+
+            if (dbProfileError) throw dbProfileError;
+
+            //user_posts
+            const newUserPosts = {
+                auth_id: authData.user.id,
+                img_location: "temp",
+                count: 0
+            }
+
+            const { data: dbPosts, error: dbPostsError } = await supabase
+                .from("user_posts")
+                .insert(newUserPosts)
+                .select();
+
+            if (dbPostsError) throw dbPostsError;
 
             res.json({
-                message: "Signup successful! Check your email for verification.",
-                user: data.user,
+                message: "Signup successful!",
+                user: authData.user,
+                dbUser: dbData,
+                dbProfile: dbProfile,
+                dbPosts: dbPosts
             });
+
         } catch (error) {
             res.status(400).json({ error: error.message });
         }

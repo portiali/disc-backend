@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController"); // Match exact filename
+const userController = require("../controllers/userController"); 
 const authMiddleware = require("../middleware/authentication");
 //for image upload from formData()-- yet to be implemented!
 const multer = require("multer");

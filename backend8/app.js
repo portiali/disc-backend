@@ -4,23 +4,21 @@ const cors = require("cors");
 
 
 const corsOptions = {
-    origin: "http://localhost:3000", // allow requests from your frontend domain- change later when deployed on vercel!!
-    credentials: true,              // allow cookies/credentials to be sent
+    origin: "http://localhost:3000", 
+    credentials: true,              
 };
 
 app.use(cors(corsOptions));
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
-// const authRoutes = require("./api/auth");
-// const userRoutes = require("./api/user");
 
 
-// const upload = multer();
+
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
-//changed to /api/auth and /api/users
+
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 

@@ -42,25 +42,25 @@ class AuthController {
 
             //user_posts
             // get rid of this only use this when a new post is added!
-            const newUserPosts = {
-                auth_id: authData.user.id,
-                img_location: "temp",
-                title: "no title"
-            }
+            // const newUserPosts = {
+            //     auth_id: authData.user.id,
+            //     img_location: "temp",
+            //     title: "no title"
+            // }
 
-            const { data: dbPosts, error: dbPostsError } = await supabase
-                .from("user_posts")
-                .insert(newUserPosts)
-                .select();
+            // const { data: dbPosts, error: dbPostsError } = await supabase
+            //     .from("user_posts")
+            //     .insert(newUserPosts)
+            //     .select();
 
-            if (dbPostsError) throw dbPostsError;
+            // if (dbPostsError) throw dbPostsError;
 
             res.json({
                 message: "Signup successful!",
                 user: authData.user,
                 dbUser: dbData,
                 dbProfile: dbProfile,
-                dbPosts: dbPosts
+                // dbPosts: dbPosts
             });
 
         } catch (error) {

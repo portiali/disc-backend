@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController"); // Match exact filename
-const authMiddleware = require("../middleware/auth");
+const authMiddleware = require("../middleware/authentication");
 const multer = require("multer");
 const upload = multer();  // Initialize multer here
 

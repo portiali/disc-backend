@@ -1,21 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController"); // Match exact filename
-const authMiddleware = require("../middleware/auth");
+const authMiddleware = require("../middleware/authentication");
+//for image upload from formData()-- yet to be implemented!
 const multer = require("multer");
-const upload = multer();  // Initialize multer here
+const upload = multer(); 
 
 //uncomment after testing!!
 router.use(authMiddleware);
 
-// Protected routes
-// router.get("/profile", userController.getProfile);
-// router.put("/profile", userController.updateProfile);
-// router.get("/major/:major", userController.getUsersByMajor);
-// router.post("/courses/:courseId/enroll", userController.enrollInCourse);
-// router.post("/posts", userController.createPost);
 
-//newly added
+//protected routes
 router.post("/editprofile", userController.editProfile);
 router.get("/profiles", userController.getAllUsers)
 router.post( "/createnew", userController.createNew);

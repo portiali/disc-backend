@@ -10,16 +10,17 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// const authRoutes = require("./routes/authRoutes");
-// const userRoutes = require("./routes/userRoutes");
-const authRoutes = require("./api/auth");
-const userRoutes = require("./api/user");
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+// const authRoutes = require("./api/auth");
+// const userRoutes = require("./api/user");
 
 
 // const upload = multer();
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
+//changed to /api/auth and /api/users
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 
